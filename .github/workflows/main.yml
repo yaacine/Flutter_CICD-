@@ -2,57 +2,56 @@ name: Pull Request Review
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Install Flutter
-      uses: subosito/flutter-action@v1.3.2
-    - name: Install app dependencies
-      run: flutter pub get
-    - name: Test app
-      run: flutter test --coverage
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: coverage/lcov.info
+      - uses: actions/checkout@v1
+      - name: Install Flutter
+        uses: subosito/flutter-action@v1.3.2
+      - name: Install app dependencies
+        run: flutter pub get
+      - name: Test app
+        run: flutter test --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/lcov.info
 
-    - name: Approve pull request
-      if: success()
-      uses: andrewmusgrave/automatic-pull-request-review@0.0.2
-      with:
-        repo-token: '${{ secrets.GITHUB_TOKEN }}'
-        event: APPROVE
-        body: 'Thank you dependabot 🎊'
+      - name: Approve pull request
+        if: success()
+        uses: andrewmusgrave/automatic-pull-request-review@0.0.2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          event: APPROVE
+          body: "Thank you dependabot 🎊"
 
+      - name: Slack CI Failure Notification
+        if: failure() || cancelled()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_CHANNEL: general
+          SLACK_COLOR: "#f32013"
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: "Pull request Rejected"
+          SLACK_TITLE: Pull Request Review Faild ${{ github.sha }}
+          SLACK_USERNAME: Librarian_app
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-    - name: Slack CI Failure Notification
-      if: failure() || cancelled()
-      uses: rtCamp/action-slack-notify@master
-      env:
-        SLACK_CHANNEL: general
-        SLACK_COLOR: '#f32013'
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: 'Pull request Rejected'
-        SLACK_TITLE: Pull Request Review Faild ${{ github.sha }}
-        SLACK_USERNAME: Librarian_app
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
-    - name: Slack CI Success Notification
-      if: success()
-      uses: rtCamp/action-slack-notify@master
-      env:
-        SLACK_CHANNEL: general
-        SLACK_COLOR: '#2eb887'
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: 'Pull request approuved and merged :rocket: '
-        SLACK_TITLE: Pull Request Review Accepted ${{ github.sha }}
-        SLACK_USERNAME: Librarian_app
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Slack CI Success Notification
+        if: success()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_CHANNEL: general
+          SLACK_COLOR: "#2eb887"
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: "Pull request approuved and merged :rocket: "
+          SLACK_TITLE: Pull Request Review Accepted ${{ github.sha }}
+          SLACK_USERNAME: Librarian_app
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
