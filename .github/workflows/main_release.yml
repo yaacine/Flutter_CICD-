@@ -40,7 +40,7 @@ jobs:
         with:
           tag_name: ${{ steps.compute_tag.outputs.next_tag }}
           release_name: Release ${{ steps.compute_tag.outputs.next_tag }}
-          body: body: >
+          body: >
             Automatic release of ${{ steps.compute_tag.outputs.next_tag }}
           draft: false
           prerelease: false
