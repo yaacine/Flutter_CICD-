@@ -17,12 +17,20 @@ jobs:
         run: flutter pub get
       - name: Test app
         run: flutter test --coverage
+        
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage/lcov.info
-
+    
+      - name: Run lint
+        uses: kitek/dartanalyzer-annotations-action@v1  
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          check_name: 'Automatically Linting the Dart Code'
+          commit_sha: ${{ github.sha }}
 
       - name: Slack CI Failure Notification
         if: failure() || cancelled()
