@@ -1,3 +1,5 @@
+![example workflow name](https://github.com/yaacine/Flutter_CICD-/workflows/Release/badge.svg)
+
 [![codecov](https://codecov.io/gh/yaacine/Flutter_CICD-/branch/master/graph/badge.svg)](https://codecov.io/gh/yaacine/Flutter_CICD-)
 
 # flutter_cicd
