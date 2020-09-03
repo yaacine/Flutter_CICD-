@@ -53,8 +53,4 @@ jobs:
           SLACK_MESSAGE: "Pull request approuved and merged :rocket: "
           SLACK_TITLE: Pull Request Review Accepted ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
-<<<<<<< HEAD
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-=======
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
->>>>>>> 91e1e8884d7300590cd51e1281afbbd5a1049401
