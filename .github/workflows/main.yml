@@ -1,10 +1,9 @@
 name: Pull Request Review
 
 on:
-  push:
-    branches: [master]
   pull_request:
     branches: [master]
+    types: [opened]
 
 jobs:
   test:
