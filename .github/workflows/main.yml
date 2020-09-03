@@ -31,8 +31,8 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#f32013"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request Rejected"
-          SLACK_TITLE: Pull Request Review Faild ${{ github.sha }}
+          SLACK_MESSAGE: "Pull Request Fail"
+          SLACK_TITLE: Pull Request Faild in automated check ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -43,7 +43,7 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#2eb887"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request approuved and merged :rocket: "
-          SLACK_TITLE: Pull Request Review Accepted ${{ github.sha }}
+          SLACK_MESSAGE: "Pull request Success :rocket: "
+          SLACK_TITLE: Pull Request Passed for Manual Approuval ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
