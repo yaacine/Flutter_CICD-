@@ -1,9 +1,8 @@
-name: Pull Request Review
+name: Release
 
 on:
-  push:
-    branches: [master]
   pull_request:
+    types: [closed]
     branches: [master]
 
 jobs:
@@ -25,12 +24,12 @@ jobs:
           file: coverage/lcov.info
 
       - name: Approve pull request
-        if: success() && 
+        if: success()
         uses: andrewmusgrave/automatic-pull-request-review@0.0.2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           event: APPROVE
-          body: "Thank you contributor 🎊"
+          body: "Thank you dependabot 🎊"
 
       - name: Slack CI Failure Notification
         if: failure() || cancelled()
