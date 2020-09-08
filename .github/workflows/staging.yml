@@ -36,14 +36,12 @@ jobs:
           file: coverage/lcov.info
 
       - name: Run lint
-        uses: kitek/dartanalyzer-annotations-action@v1  
+        uses: kitek/dartanalyzer-annotations-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          check_name: 'Automatically Linting the Dart Code'
+          check_name: "Automatically Linting the Dart Code"
           commit_sha: ${{ github.sha }}
-
-
 
       - name: Slack CI Failure Notification
         if: failure() || cancelled()
@@ -65,6 +63,6 @@ jobs:
           SLACK_COLOR: "#2eb887"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE: "Pull request successfully moved to staging  :rocket: "
-          SLACK_TITLE: Pull Request Reviewed and Accepted ${{ github.sha }} 
+          SLACK_TITLE: Pull Request Reviewed and Accepted ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
