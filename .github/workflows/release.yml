@@ -1,29 +1,42 @@
-name: Pull Request Review
+name: Release
 
 on:
+  push:
+    branches: [master]
   pull_request:
-    branches: [staging]
-    types: [opened]
+    types: [closed]
+    branches: [master]
 
 jobs:
-  test:
+  Release:
     runs-on: ubuntu-latest
 
     steps:
+      - id: compute_tag
+        uses: craig-day/compute-tag@v10
+        with:
+          github_token: ${{ github.token }}
+          version_type: patch
+
+
+      
       - uses: actions/checkout@v1
+
       - name: Install Flutter
         uses: subosito/flutter-action@v1.3.2
+
       - name: Install app dependencies
         run: flutter pub get
+
       - name: Test app
         run: flutter test --coverage
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage/lcov.info
-    
+
       - name: Run lint
         uses: kitek/dartanalyzer-annotations-action@v1  
         env:
@@ -32,6 +45,30 @@ jobs:
           check_name: 'Automatically Linting the Dart Code'
           commit_sha: ${{ github.sha }}
 
+
+      # get the version from the pubspec.yml file
+      - uses: radcortez/project-metadata-action@master
+        name: retrieve project metadata
+        id: metadata
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          metadata-file-path: '.github/pubspec.yaml'
+
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{steps.metadata.outputs.version}}
+          release_name: Release ${{steps.metadata.outputs.version}}
+          body: >
+            Automatic release of ${{steps.metadata.outputs.version}}
+          draft: false
+          prerelease: false
+
+
       - name: Slack CI Failure Notification
         if: failure() || cancelled()
         uses: rtCamp/action-slack-notify@master
@@ -39,8 +76,8 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#f32013"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull Request Fail"
-          SLACK_TITLE: Pull Request Faild in automated check ${{ github.sha }}
+          SLACK_MESSAGE: "Pull request Rejected"
+          SLACK_TITLE: Pull Request Review Faild ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -51,7 +88,7 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#2eb887"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request Success :rocket: "
-          SLACK_TITLE: Pull Request Passed for Manual Approuval ${{ github.sha }}
+          SLACK_MESSAGE: "Pull request approuved and merged  Release Created  ${{steps.metadata.outputs.version}} :rocket: "
+          SLACK_TITLE: Pull Request Reviewed and Accepted ${{ github.sha }} 
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

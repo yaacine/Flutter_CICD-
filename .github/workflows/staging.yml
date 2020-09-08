@@ -2,10 +2,10 @@ name: Release
 
 on:
   push:
-    branches: [master]
+    branches: [staging]
   pull_request:
     types: [closed]
-    branches: [master]
+    branches: [staging]
 
 jobs:
   Release:
@@ -18,8 +18,6 @@ jobs:
           github_token: ${{ github.token }}
           version_type: patch
 
-
-      
       - uses: actions/checkout@v1
 
       - name: Install Flutter
@@ -47,29 +45,6 @@ jobs:
 
 
 
-      # get the version from the pubspec.yml file
-      - uses: radcortez/project-metadata-action@master
-        name: retrieve project metadata
-        id: metadata
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          metadata-file-path: '.github/pubspec.yaml'
-
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{steps.metadata.outputs.version}}
-          release_name: Release ${{steps.metadata.outputs.version}}
-          body: >
-            Automatic release of ${{steps.metadata.outputs.version}}
-          draft: false
-          prerelease: false
-
-
       - name: Slack CI Failure Notification
         if: failure() || cancelled()
         uses: rtCamp/action-slack-notify@master
@@ -77,8 +52,8 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#f32013"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request Rejected"
-          SLACK_TITLE: Pull Request Review Faild ${{ github.sha }}
+          SLACK_MESSAGE: "Pull request failed to pass staging requirements"
+          SLACK_TITLE: Pull Request Auto-Review Faild ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -89,7 +64,7 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#2eb887"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request approuved and merged  Release Created  ${{steps.metadata.outputs.version}} :rocket: "
+          SLACK_MESSAGE: "Pull request successfully moved to staging  :rocket: "
           SLACK_TITLE: Pull Request Reviewed and Accepted ${{ github.sha }} 
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
