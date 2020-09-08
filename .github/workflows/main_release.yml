@@ -1,6 +1,8 @@
 name: Release
 
 on:
+  push:
+    branches: [master]
   pull_request:
     types: [closed]
     branches: [master]
@@ -57,6 +59,14 @@ jobs:
             Automatic release of ${{steps.metadata.outputs.version}}
           draft: false
           prerelease: false
+
+      - name: Run lint
+        uses: kitek/dartanalyzer-annotations-action@v1  
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          check_name: 'Automatically Linting the Dart Code'
+          commit_sha: ${{ github.sha }}
 
 
       - name: Slack CI Failure Notification
