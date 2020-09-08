@@ -37,6 +37,15 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage/lcov.info
 
+      - name: Run lint
+        uses: kitek/dartanalyzer-annotations-action@v1  
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          check_name: 'Automatically Linting the Dart Code'
+          commit_sha: ${{ github.sha }}
+
+
 
       # get the version from the pubspec.yml file
       - uses: radcortez/project-metadata-action@master
@@ -59,14 +68,6 @@ jobs:
             Automatic release of ${{steps.metadata.outputs.version}}
           draft: false
           prerelease: false
-
-      - name: Run lint
-        uses: kitek/dartanalyzer-annotations-action@v1  
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          check_name: 'Automatically Linting the Dart Code'
-          commit_sha: ${{ github.sha }}
 
 
       - name: Slack CI Failure Notification
