@@ -43,6 +43,7 @@ jobs:
           check_name: "Automatically Linting the Dart Code"
           commit_sha: ${{ github.sha }}
 
+          
       # get the version from the pubspec.yml file
       # - uses: radcortez/project-metadata-action@master
       #   name: retrieve project metadata
