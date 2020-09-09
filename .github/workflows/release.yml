@@ -63,8 +63,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{steps.metadata.outputs.version}}
-          release_name: Release ${{steps.metadata.outputs.version}}
+          tag_name: ${{ steps.compute_tag.outputs.next_tag }}
+          release_name: ${{ steps.compute_tag.outputs.next_tag }}
           body: |
             ${{ steps.Changelog.outputs.changelog }}
           draft: false
