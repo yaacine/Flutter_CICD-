@@ -51,6 +51,12 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           metadata-file-path: ".github/pubspec.yaml"
 
+      - name: Changelog
+        uses: scottbrenner/generate-changelog-action@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -59,8 +65,8 @@ jobs:
         with:
           tag_name: ${{steps.metadata.outputs.version}}
           release_name: Release ${{steps.metadata.outputs.version}}
-          body: >
-            Automatic release of ${{steps.metadata.outputs.version}}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
           draft: false
           prerelease: false
 
