@@ -44,12 +44,12 @@ jobs:
           commit_sha: ${{ github.sha }}
 
       # get the version from the pubspec.yml file
-      - uses: radcortez/project-metadata-action@master
-        name: retrieve project metadata
-        id: metadata
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          metadata-file-path: ".github/pubspec.yaml"
+      # - uses: radcortez/project-metadata-action@master
+      #   name: retrieve project metadata
+      #   id: metadata
+      #   with:
+      #     github-token: ${{secrets.GITHUB_TOKEN}}
+      #     metadata-file-path: ".github/pubspec.yaml"
 
       - name: Changelog
         uses: scottbrenner/generate-changelog-action@master
