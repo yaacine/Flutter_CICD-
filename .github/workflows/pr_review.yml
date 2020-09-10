@@ -1,35 +1,35 @@
-name: Pull Request Review
+name: PR_Review
 
 on:
   pull_request:
-    branches: [master]
-    types: [opened]
+    branches: [staging]
+    types: [opened,edited ,reopened]
 
 jobs:
-  test:
+  PR_Review:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install Flutter
         uses: subosito/flutter-action@v1.3.2
       - name: Install app dependencies
         run: flutter pub get
       - name: Test app
         run: flutter test --coverage
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage/lcov.info
-    
+
       - name: Run lint
-        uses: kitek/dartanalyzer-annotations-action@v1  
+        uses: kitek/dartanalyzer-annotations-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          check_name: 'Automatically Linting the Dart Code'
+          check_name: "Automatically Linting the Dart Code"
           commit_sha: ${{ github.sha }}
 
       - name: Slack CI Failure Notification

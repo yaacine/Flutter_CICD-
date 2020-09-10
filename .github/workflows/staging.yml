@@ -1,12 +1,14 @@
-name: Release
+name: Staging
 
 on:
+  push:
+    branches: [staging]
   pull_request:
     types: [closed]
-    branches: [master]
+    branches: [staging]
 
 jobs:
-  Release:
+  Staging:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,35 +18,30 @@ jobs:
           github_token: ${{ github.token }}
           version_type: patch
 
+      - uses: actions/checkout@v2
 
-      - uses: actions/checkout@v1
       - name: Install Flutter
         uses: subosito/flutter-action@v1.3.2
+
       - name: Install app dependencies
         run: flutter pub get
+
       - name: Test app
         run: flutter test --coverage
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage/lcov.info
 
-
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Run lint
+        uses: kitek/dartanalyzer-annotations-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.compute_tag.outputs.next_tag }}
-          release_name: Release ${{ steps.compute_tag.outputs.next_tag }}
-          body: >
-            Automatic release of ${{ steps.compute_tag.outputs.next_tag }}
-          draft: false
-          prerelease: false
-
+          check_name: "Automatically Linting the Dart Code"
+          commit_sha: ${{ github.sha }}
 
       - name: Slack CI Failure Notification
         if: failure() || cancelled()
@@ -53,8 +50,8 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#f32013"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request Rejected"
-          SLACK_TITLE: Pull Request Review Faild ${{ github.sha }}
+          SLACK_MESSAGE: "Pull request failed to pass staging requirements"
+          SLACK_TITLE: Pull Request Auto-Review Faild ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -65,7 +62,7 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: "#2eb887"
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: "Pull request approuved and merged :rocket: "
+          SLACK_MESSAGE: "Pull request successfully moved to staging  :rocket: "
           SLACK_TITLE: Pull Request Reviewed and Accepted ${{ github.sha }}
           SLACK_USERNAME: Librarian_app
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
