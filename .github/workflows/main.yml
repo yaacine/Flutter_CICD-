@@ -1,4 +1,4 @@
-name: Pull Request Review
+name: PR_Review
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
     types: [opened]
 
 jobs:
-  test:
+  PR_Review:
     runs-on: ubuntu-latest
 
     steps:
