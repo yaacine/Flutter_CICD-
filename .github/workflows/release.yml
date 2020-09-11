@@ -44,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          check_name: "Automatically Linting the Dart Code"
+          check_name: "Release"
           commit_sha: ${{ github.event.pull_request.head.sha }}
 
           

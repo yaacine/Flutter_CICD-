@@ -29,7 +29,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          check_name: "Automatically Linting the Dart Code"
+          check_name: "PR_Review"
           commit_sha: ${{ github.event.pull_request.head.sha }}
 
       - name: Slack CI Failure Notification
