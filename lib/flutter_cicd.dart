@@ -2,8 +2,12 @@ library flutter_cicd;
 
 /// A Calculator.
 class Calculator {
+  int _id = null;
+
   /// Returns [value] plus 1.
-  dynamic _test = "";
+
   int addOne(int value) => value + 1;
-  int t = null;
+
+  /// returns value *2
+  int foisDeux(int val) => val * 2;
 }
