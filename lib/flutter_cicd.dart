@@ -2,6 +2,7 @@ library flutter_cicd;
 
 /// A Calculator.
 class Calculator {
+  // ignore: prefer_final_fields
   int _id = null;
 
   /// Returns [value] plus 1.
